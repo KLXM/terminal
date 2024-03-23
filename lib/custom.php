@@ -15,11 +15,13 @@ class CustomCommands {
     {
         $out = '<h1>REDAXO Terminal</h1>
         <pre>
-        Welcome to the REDAXO Terminal.
+ Welcome to the REDAXO Terminal.
 The terminal provides a reduced set of commands and is mainly used to call the REDAXO console.
 
 The console is accessed with the command console.
 Parameters can also be passed directly, such as console package:list.
+
+To get a list of all commands type commandlist
         </pre>';
 
         return $out;
