@@ -22,7 +22,7 @@ The console is accessed with the command console.
 Parameters can also be passed directly, such as console package:list.
         </pre>';
 
-        return rex_path::base();
+        return $out;
     }
     
 
