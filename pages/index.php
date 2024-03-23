@@ -4,6 +4,7 @@ namespace skerbis\terminal;
 use rex;
 use rex_addon;
 use rex_backend_login;
+use rex_response;
 
 // Überprüfen Sie, ob die Anfrage per AJAX gesendet wurde und ob der 'command'-Parameter gesetzt ist.
 if (rex::getUser() 
@@ -48,7 +49,7 @@ if (rex::getUser()
     <title>Terminal.php</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link href="https://cdn.rawgit.com/rastikerdar/vazir-code-font/v1.1.2/dist/font-face.css" rel="stylesheet" type="text/css" />
-    <style>
+    <style <?=rex_response::getNonce()?>>
       :root{
           --font: 'Vazir Code', 'Vazir Code Hack';
           --font-size: 16px;
@@ -90,11 +91,11 @@ if (rex::getUser()
       @keyframes blink { 0% { opacity: 1} 50% { opacity: .75} 100% { opacity: 1} }
     </style>
 
-    <script type="text/javascript">
+    <script type="text/javascript" <?=rex_response::getNonce()?>>
         let commands_list = <?php print_r(json_encode($terminal->commandsList()));?>;
     </script>
 
-    <script type="text/javascript">
+    <script type="text/javascript" <?=rex_response::getNonce()?>>
         var path = '<?php echo $terminal->pwd(); ?>';
         var command = '';
         var command_history = [];
