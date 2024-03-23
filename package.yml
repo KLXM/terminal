@@ -4,11 +4,12 @@ author: 'skerbis'
 supportpage: https://github.com/skerbis/terminal
 page:
     title: Terminal
-    popup: openMediaPool(); return false;
+    popup: true
     perm: admin
     live_mode: false
     hasLayout: false
     icon: rex-icon fa-prompt
+    linkAttr: { class: rex-popup }
 requires:
     redaxo: '^5.16.1'
     php:
