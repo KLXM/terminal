@@ -2,8 +2,9 @@
 namespace skerbis\terminal;
 
 // Überprüfen Sie, ob die Anfrage per AJAX gesendet wurde und ob der 'command'-Parameter gesetzt ist.
-if (
-    !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+if (rex::getUser() 
+    && rex_backend_login::hasSession() 
+    && !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
     && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
     && isset($_POST['command'])
 ) {
