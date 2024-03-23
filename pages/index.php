@@ -2,6 +2,8 @@
 namespace skerbis\terminal;
 
 use rex;
+use rex_addon;
+use rex_backend_login;
 
 // Überprüfen Sie, ob die Anfrage per AJAX gesendet wurde und ob der 'command'-Parameter gesetzt ist.
 if (rex::getUser() 
