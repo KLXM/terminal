@@ -53,6 +53,7 @@ if (rex::getUser()
           --font: 'Vazir Code', 'Vazir Code Hack';
           --font-size: 16px;
           --primary-color: #101010;
+          --secondary-color: #1867a6;
           --color-scheme-1: #55c2f9;
           --color-scheme-2: #ff5c57;
           --color-scheme-3: #5af68d;
