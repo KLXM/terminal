@@ -11,7 +11,6 @@ namespace skerbis\terminal;
 class TerminalPHP
 {
     private array $allowed_commands = [
-        $allowed_commands = [
             'cd',
             'chown',
             'date',
@@ -27,7 +26,6 @@ class TerminalPHP
             'php',
             'pwd',
             'whoami',
-        ];
     ];
 
     public function __construct(string $path = '')
