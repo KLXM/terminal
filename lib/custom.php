@@ -5,7 +5,7 @@ use rex_path;
 
 class CustomCommands {
 
-public static function showConfig() {
+public static function showconfig() {
         $configPath = rex_path::coreData('config.yml');
 
         if (file_exists($configPath)) {
