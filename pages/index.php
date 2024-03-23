@@ -19,7 +19,7 @@ if (
     $terminal = new TerminalPHP($path);
 
     // Überprüfen Sie, ob der Befehl in den CustomCommands-Klassenmethoden existiert.
-    if (in_array($command, get_class_methods('CustomCommands'), true)) {
+    if (in_array($command, get_class_methods('\skerbis\terminal\CustomCommands'), true)) {
         // Wenn ja, führen Sie den Befehl aus und geben Sie das Ergebnis im JSON-Format zurück.
         echo json_encode([
             'result' => CustomCommands::{$command}($arguments),
