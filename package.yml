@@ -4,7 +4,7 @@ author: 'skerbis'
 supportpage: https://github.com/skerbis/terminal
 page:
     title: Terminal
-    popup: true
+    popup: openMediaPool(); return false;
     perm: admin
     live_mode: false
     hasLayout: false
