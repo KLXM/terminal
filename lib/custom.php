@@ -14,7 +14,7 @@ class CustomCommands {
     public static function console(): string 
     {
         $command = new TerminalPHP();
-        return $command->runCommand('php '.rex_path::base().'redaxo/bin/console');
+        return '<pre>'.$command->runCommand('php '.rex_path::base().'redaxo/bin/console').'</pre>';
     }
 
 
