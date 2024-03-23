@@ -394,7 +394,7 @@ if (rex::getUser()
   <body>
     <terminal>
       <header>
-        <title><?php echo '(' . ($terminal->whoami() ? $terminal->whoami() : '') . ($terminal->whoami() && $terminal->hostname() ? '@' . $terminal->hostname() : '') . ')'; ?></title>
+        <title>REDAXO Terminal :: <?php echo '(' . ($terminal->whoami() ? $terminal->whoami() : '') . ($terminal->whoami() && $terminal->hostname() ? '@' . $terminal->hostname() : '') . ')'; ?></title>
       </header>
       <content>
         <line class="current"><path><?php echo $terminal->pwd(); ?></path> <sp></sp> <t><bl></bl></t></line>
