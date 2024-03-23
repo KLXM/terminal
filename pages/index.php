@@ -82,7 +82,7 @@ if (rex::getUser()
       terminal content sp::before{ content: var(--separator);}
       terminal content cm{ color: var(--color-scheme-3); }
       terminal content code{ display: inline; margin: 0; white-space: unset;}
-      terminal content bl{ margin-left: 0.5rem; color: var(--blink-color); display: inline-block; height: 1rem; width: 2px; background: yellow; position: relative; top: 2px;  animation: blink 1s steps(3) infinite;}
+      terminal content bl{ margin-left: 1px; color: var(--blink-color); display: inline-block; height: 1rem; width: 1px; background: yellow; position: relative; top: 2px;  animation: blink 1s steps(3) infinite;}
 
       footer{ position: absolute; width: 100%; left: 0; bottom: 20px; color: white; text-align: center; font-size: 12px; }
       footer a{ text-decoration: none; color: #fdbc40; }
