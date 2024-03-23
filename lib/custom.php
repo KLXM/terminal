@@ -13,7 +13,8 @@ class CustomCommands {
 
     public static function console(): string 
     {
-        return TerminalPHP::runCommand(rex_path::base().'/redaxo/bin/php console');
+        $command = new TerminalPHP();
+        return $command->runCommand(rex_path::base().'/redaxo/bin/php console');
     }
 
 
