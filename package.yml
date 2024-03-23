@@ -9,7 +9,6 @@ page:
     live_mode: false
     hasLayout: false
     icon: rex-icon fa-terminal
-    linkAttr: { target: _blank }
     linkAttr: { class: 'terminal-link' }
 requires:
     redaxo: '^5.16.1'
