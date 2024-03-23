@@ -15,7 +15,7 @@ class CustomCommands {
     {
         if ($args!='') 
         {
-            $arguments = implode(' ', $args)
+            $arguments = implode(' ', $args);
         }
         $command = new TerminalPHP();
         return '<pre>'.$command->runCommand('php '.rex_path::base().'redaxo/bin/console'.$arguments).'</pre>';
