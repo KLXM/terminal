@@ -25,6 +25,7 @@ class TerminalPHP
             'ls',
             'php',
             'pwd',
+            'tail',
             'whoami',
     ];
 
