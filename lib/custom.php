@@ -10,9 +10,9 @@ public static function showconfig() {
 
         if (file_exists($configPath)) {
             $configContent = file_get_contents($configPath);
-            echo '<pre>' . htmlspecialchars($configContent) . '</pre>';
+            return '<pre>' . htmlspecialchars($configContent) . '</pre>';
         } else {
-            echo '<pre>Config not found</pre>';
+            return '<pre>Config not found</pre>';
         }
     }
 
