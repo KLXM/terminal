@@ -277,8 +277,7 @@ if (rex::getUser()
                 autocomplete_position = 0;
                 command = autocomplete_current_result;
             }
-            if (command[command.length-1] === '/' && t === '/')
-                return;
+           
 
             let part1 = command.substr(0, command.length + blink_position);
             let part2 = command.substr(command.length + blink_position);
