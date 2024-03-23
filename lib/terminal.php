@@ -8,90 +8,103 @@ namespace skerbis\terminal;
  * @author   SmartWF <hi@smartwf.ir>
  */
 
-
-class TerminalPHP {
+class TerminalPHP
+{
     private array $allowed_commands = [
-     'ls',
-     'echo',
-		'hostname',
-		'cd',
-		'pwd',
-		'ffmpeg',
-		'free',
-		'df',
-		'chown',
-		'php',
-        'date',
-        'whoami',
-        'grep',
-		'git',
-        'find'
+        $allowed_commands = [
+            'cd',
+            'chown',
+            'date',
+            'df',
+            'echo',
+            'ffmpeg',
+            'find',
+            'free',
+            'git',
+            'grep',
+            'hostname',
+            'ls',
+            'php',
+            'pwd',
+            'whoami',
+        ];
     ];
 
-    public function __construct(string $path = '') {
+    public function __construct(string $path = '')
+    {
         $this->_cd($path);
     }
 
-    private function shell(string $cmd): string {
+    private function shell(string $cmd): string
+    {
         return trim(shell_exec($cmd) ?? '');
     }
 
-    private function commandExists(string $command): bool {
-        return !empty($this->shell('command -v '.$command));
+    private function commandExists(string $command): bool
+    {
+        return !empty($this->shell('command -v ' . $command));
     }
 
-    public function __call(string $cmd, array $arg): string {
+    public function __call(string $cmd, array $arg): string
+    {
         return $this->runCommand($cmd . (isset($arg[0]) ? ' ' . $arg[0] : ''));
     }
 
-    public function runCommand(string $command): string {
-        $cmd = explode(' ', $command)[0];       
-		$arg = count(explode(' ', $command)) > 1 ? implode(' ', array_slice(explode(' ', $command), 1)) : '';
+    public function runCommand(string $command): string
+    {
+        $cmd = explode(' ', $command)[0];
+        $arg = count(explode(' ', $command)) > 1 ? implode(' ', array_slice(explode(' ', $command), 1)) : '';
 
-		if (array_search($cmd, $this->getLocalCommands()) !== false){
-            $lcmd = '_'.$cmd;
+        if (array_search($cmd, $this->getLocalCommands()) !== false) {
+            $lcmd = '_' . $cmd;
             return $this->$lcmd($arg);
         }
-		
-		
-	
+
         if (in_array($cmd, $this->allowed_commands)) {
             return trim(shell_exec($command) ?? '');
         } else {
-            return 'terminal.php: Permission denied for command: '.$cmd;
+            return 'terminal.php: Permission denied for command: ' . $cmd;
         }
     }
 
-    public function normalizeHtml(string $input): string {
+    public function normalizeHtml(string $input): string
+    {
         return str_replace(['<', '>', "\n", "\t", ' '], ['&lt;', '&gt;', '<br>', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'], $input);
     }
-	 /**
+    /**
      * Array of Local Commands
      * @return array
      */
-    private function getLocalCommands(): array{
-        $commands = array_filter(get_class_methods($this), function ($i){ return ($i[0] == '_' && $i[1] != '_') ? true : false; });
-        foreach ($commands as $i => $command)
+    private function getLocalCommands(): array
+    {
+        $commands = array_filter(get_class_methods($this), function ($i) {return ($i[0] == '_' && $i[1] != '_') ? true : false;});
+        foreach ($commands as $i => $command) {
             $commands[$i] = substr($command, 1);
+        }
+
         return $commands;
     }
 
-    private function _cd(string $path): string {
+    private function _cd(string $path): string
+    {
         if ($path) {
             chdir($path);
         }
         return '';
     }
-	
-	private function _moin(): string {
+
+    private function _moin(): string
+    {
         return 'Selber';
     }
 
-    private function _pwd(): string {
+    private function _pwd(): string
+    {
         return getcwd() ?: '';
     }
 
-    private function _ping(string $a): string {
+    private function _ping(string $a): string
+    {
         if (strpos($a, '-c ') !== false) {
             return trim(shell_exec('ping ' . $a) ?? '');
         }
@@ -99,14 +112,10 @@ class TerminalPHP {
     }
 }
 
-
-
-
-
 // Überprüfen Sie, ob die Anfrage per AJAX gesendet wurde und ob der 'command'-Parameter gesetzt ist.
 if (
-    !empty($_SERVER['HTTP_X_REQUESTED_WITH']) 
-    && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest' 
+    !empty($_SERVER['HTTP_X_REQUESTED_WITH'])
+    && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest'
     && isset($_POST['command'])
 ) {
     // Explodieren Sie den 'command'-String in ein Array, trennen Sie den Befehl von den Argumenten.
@@ -124,22 +133,19 @@ if (
     if (in_array($command, get_class_methods('CustomCommands'), true)) {
         // Wenn ja, führen Sie den Befehl aus und geben Sie das Ergebnis im JSON-Format zurück.
         echo json_encode([
-            'result' => CustomCommands::{$command}($arguments), 
-            'path' => $terminal->pwd()
+            'result' => CustomCommands::{$command}($arguments),
+            'path' => $terminal->pwd(),
         ]);
     } else {
         // Andernfalls führen Sie den Befehl im Terminal aus und geben Sie das Ergebnis im JSON-Format zurück.
         echo json_encode([
-            'result' => $terminal->normalizeHtml($terminal->runCommand($_REQUEST['command'])), 
-            'path' => $terminal->pwd()
+            'result' => $terminal->normalizeHtml($terminal->runCommand($_REQUEST['command'])),
+            'path' => $terminal->pwd(),
         ]);
     }
-}
-
-
-else{
+} else {
     $terminal = new TerminalPHP();
-?>
+    ?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -182,18 +188,18 @@ else{
       terminal content cm{ color: var(--color-scheme-3); }
       terminal content code{ display: inline; margin: 0; white-space: unset;}
       terminal content bl{ margin-left: 0.5rem; color: var(--blink-color); display: inline-block; height: 1rem; width: 0.8rem; background: yellow; position: relative; top: 2px;  animation: blink 1s steps(3) infinite;}
-   
+
       footer{ position: absolute; width: 100%; left: 0; bottom: 20px; color: white; text-align: center; font-size: 12px; }
       footer a{ text-decoration: none; color: #fdbc40; }
       @keyframes blink { 0% { opacity: 1} 50% { opacity: .75} 100% { opacity: 1} }
     </style>
 
     <script type="text/javascript">
-        let commands_list = <?php print_r(json_encode($terminal->commandsList())); ?>;
+        let commands_list = <?php print_r(json_encode($terminal->commandsList()));?>;
     </script>
 
     <script type="text/javascript">
-        var path = '<?php echo $terminal->pwd();?>';
+        var path = '<?php echo $terminal->pwd(); ?>';
         var command = '';
         var command_history = [];
         var history_index = 0;
@@ -493,13 +499,13 @@ else{
   <body>
     <terminal>
       <header>
-        <title><?php echo '('.($terminal->whoami() ? $terminal->whoami() : '').($terminal->whoami() && $terminal->hostname() ? '@'.$terminal->hostname() : '').')';?></title>
+        <title><?php echo '(' . ($terminal->whoami() ? $terminal->whoami() : '') . ($terminal->whoami() && $terminal->hostname() ? '@' . $terminal->hostname() : '') . ')'; ?></title>
       </header>
       <content>
-        <line class="current"><path><?php echo $terminal->pwd();?></path> <sp></sp> <t><bl></bl></t></line>
+        <line class="current"><path><?php echo $terminal->pwd(); ?></path> <sp></sp> <t><bl></bl></t></line>
       </content>
     </terminal>
     <footer></footer>
   </body>
 </html>
-<?php } ?>
+<?php }?>
