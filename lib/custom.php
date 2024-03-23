@@ -5,6 +5,16 @@ use rex_path;
 
 class CustomCommands {
 
+public static function showConfig() {
+        $configPath = rex_path::coreData('config.yml');
+
+        if (file_exists($configPath)) {
+            $configContent = file_get_contents($configPath);
+            echo '<pre>' . htmlspecialchars($configContent) . '</pre>';
+        } else {
+            echo '<pre>Config not found</pre>';
+        }
+    }
 
     public static function basepath(): string 
     {
