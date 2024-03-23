@@ -9,7 +9,7 @@ page:
     live_mode: false
     hasLayout: false
     icon: rex-icon fa-prompt
-    linkAttr: { class: rex-popup }
+    linkAttr: { target: _blank }
 requires:
     redaxo: '^5.16.1'
     php:
