@@ -4,6 +4,7 @@ author: 'skerbis'
 supportpage: https://github.com/skerbis/terminal
 page:
     title: Terminal
+    popup: true
     perm: admin
     live_mode: false
     hasLayout: false
