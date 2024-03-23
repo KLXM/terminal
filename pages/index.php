@@ -75,7 +75,7 @@ if (rex::getUser()
       terminal::after{ background: var(--primary-color); opacity: .80; }
       terminal header{ position: absolute; width: 100%; height: 45px; background: var(--primary-color); z-index: 1; border-radius: 10px 10px 0 0; user-select: none; }
       terminal header title{ display: block; position: absolute; left: 0; top: 0; width: 100%; height: 100%; text-align: center; color: var(--title-color); line-height: 45px; opacity: .8; z-index: -1; }
-      terminal content{ position: absolute; left: 1.5%; top: 60px; width: 98%; height: 92%; z-index: 1; overflow-x: hidden; overflow-y: auto; color: #ececec; font-size: var(--font-size); }
+      terminal content{ position: absolute; left: 1.5%; top: 60px; width: 98%; height: 90%; z-index: 1; overflow-x: hidden; overflow-y: auto; color: #ececec; font-size: var(--font-size); }
       terminal content line{ display: block; }
       terminal content path{ color: var(--color-scheme-1); }
       terminal content sp{ color: var(--color-scheme-2); letter-spacing: -6px; margin-right: 5px;}
