@@ -29,6 +29,19 @@ The terminal provides a reduced set of commands and is mainly used to call the R
 
 The console is accessed with the command console.
 Parameters can also be passed directly, such as console package:list.
+
+Default commands
+-------
+help, cd, chown, date, df, echo, ffmpeg, find, free, git, grep, hostname, ls, tail, php, pwd, whoami
+
+Special REDAXO commands
+-------
+- showconfig
+- basepath
+- console
+
+
+
 </pre>';
 
         return $out;
