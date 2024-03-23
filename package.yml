@@ -1,8 +1,15 @@
-package: addon_key
-version: '0.0.0'
-author: 'Friends Of REDAXO'
-supportpage: https://github.com/FriendsOfREDAXO/addon_key
+package: terminal
+version: '0.0.1'
+author: 'skerbis'
+supportpage: https://github.com/skerbis/terminal
+page:
+    title: Terminal
+    perm: admin
+    live_mode: false
+    hasLayout: false
+    icon: rex-icon fa-prompt
+    linkAttr: { target: _blank }
 requires:
-    redaxo: '^5.15.1'
+    redaxo: '^5.16.1'
     php:
-        version: '>=8.1, <9'
+        version: '>=8.2, <9'
