@@ -68,7 +68,7 @@ if (rex::getUser()
       *{ font-family: var(--font);}
       a{ color: #29a9ff; }
       body { background: #324050;}
-      terminal{ display: block; width: 80vw;  height: 80vh; position: relative; margin: 2vw auto; background: inherit; border-radius: 10px; max-width: 70rem; overflow: hidden; }
+      terminal{ display: block; width: 99vw;  height: 80vh; position: relative; margin: 2vw auto; background: inherit; border-radius: 10px; max-width: 70rem; overflow: hidden; }
       terminal::before,
       terminal::after{ content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 100%; border-radius: 10px; }
       terminal::before{ background: inherit; filter: blur(.5rem); }
