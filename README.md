@@ -1,4 +1,4 @@
-# Reduced terminal for REDAXO
+# terminal for REDAXO
 
 Please note: This is not a fully functional terminal. Interactive commands cannot be executed. This AddOn is mainly intended to run the REDAXO console or rexstan in the shell. 
 
