@@ -1,7 +1,7 @@
 package: terminal
 version: '0.1.0'
 author: 'skerbis'
-supportpage: https://github.com/klxm/terminal
+supportpage: https://github.com/KLXM/terminal
 page:
     title: Terminal
     popup: true
