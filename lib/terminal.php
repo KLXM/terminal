@@ -13,6 +13,7 @@ class TerminalPHP
     private array $allowed_commands = [
             'cd',
             'chown',
+            'composer',
             'date',
             'df',
             'echo',
