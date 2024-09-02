@@ -39,6 +39,30 @@ class TerminalPHP
         return $this->runCommand($cmd . (isset($arg[0]) ? ' ' . $arg[0] : ''));
     }
 
+
+public function runCommand(string $command): string
+{
+    $parts = explode(' ', $command, 2);
+    $cmd = $parts[0];
+    $arg = $parts[1] ?? '';
+
+    // Handle environment variable expansion
+    $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
+        return $this->environment_variables[$matches[1]] ?? '';
+    }, $arg);
+
+    if (method_exists($this, '_' . $cmd)) {
+        $method = '_' . $cmd;
+        return $this->$method($arg);
+    }
+
+    if (in_array($cmd, $this->allowed_commands)) {
+        return trim(shell_exec($command) ?? '');
+    } else {
+        return "terminal.php: Permission denied for command: $cmd";
+    }
+}
+
 public function runCommand(string $command): string
 {
     $parts = explode(' ', $command, 2);
