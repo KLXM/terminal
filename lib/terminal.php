@@ -2,7 +2,7 @@
 namespace skerbis\terminal;
 
 /**
- * Terminal.php - Improved Terminal Emulator for PHP
+ * Terminal.php - Terminal Emulator for PHP
  *
  * @package  Terminal.php
  * @author   SmartWF <hi@smartwf.ir>
@@ -11,8 +11,23 @@ namespace skerbis\terminal;
 class TerminalPHP
 {
     private array $allowed_commands = [
-        'cd', 'chown', 'composer', 'date', 'df', 'echo', 'ffmpeg', 'find',
-        'free', 'git', 'grep', 'hostname', 'ls', 'php', 'pwd', 'tail', 'whoami'
+        'cd',
+        'chown',
+        'composer',
+        'date',
+        'df',
+        'echo',
+        'ffmpeg',
+        'find',
+        'free',
+        'git',
+        'grep',
+        'hostname',
+        'ls',
+        'php',
+        'pwd',
+        'tail',
+        'whoami',
     ];
     
     private string $current_directory;
@@ -39,62 +54,28 @@ class TerminalPHP
         return $this->runCommand($cmd . (isset($arg[0]) ? ' ' . $arg[0] : ''));
     }
 
+    public function runCommand(string $command): string
+    {
+        $parts = explode(' ', $command, 2);
+        $cmd = $parts[0];
+        $arg = $parts[1] ?? '';
 
-public function runCommand(string $command): string
-{
-    $parts = explode(' ', $command, 2);
-    $cmd = $parts[0];
-    $arg = $parts[1] ?? '';
+        // Handle environment variable expansion
+        $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
+            return $this->environment_variables[$matches[1]] ?? '';
+        }, $arg);
 
-    // Handle environment variable expansion
-    $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
-        return $this->environment_variables[$matches[1]] ?? '';
-    }, $arg);
-
-    if (method_exists($this, '_' . $cmd)) {
-        $method = '_' . $cmd;
-        return $this->$method($arg);
-    }
-
-    if (in_array($cmd, $this->allowed_commands)) {
-        return trim(shell_exec($command) ?? '');
-    } else {
-        return "terminal.php: Permission denied for command: $cmd";
-    }
-}
-
-public function runCommand(string $command): string
-{
-    $parts = explode(' ', $command, 2);
-    $cmd = $parts[0];
-    $arg = $parts[1] ?? '';
-
-    // Handle environment variable expansion
-    $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
-        return $this->environment_variables[$matches[1]] ?? '';
-    }, $arg);
-
-    if (method_exists($this, '_' . $cmd)) {
-        $method = '_' . $cmd;
-        return $this->$method($arg);
-    }
-
-    if (in_array($cmd, $this->allowed_commands)) {
-        $fullCommand = escapeshellcmd($cmd) . ' ' . escapeshellarg($arg);
-        $output = '';
-        $return_var = 0;
-
-        exec($fullCommand . ' 2>&1', $output, $return_var);
-
-        if ($return_var !== 0) {
-            return "Error executing command: " . implode("\n", $output);
+        if (method_exists($this, '_' . $cmd)) {
+            $method = '_' . $cmd;
+            return $this->$method($arg);
         }
 
-        return implode("\n", $output);
-    } else {
-        return "terminal.php: Permission denied for command: $cmd";
+        if (in_array($cmd, $this->allowed_commands)) {
+            return trim(shell_exec($command) ?? '');
+        } else {
+            return "terminal.php: Permission denied for command: $cmd";
+        }
     }
-}
 
     public function normalizeHtml(string $input): string
     {
