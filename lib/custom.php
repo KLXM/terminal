@@ -21,31 +21,59 @@ public static function showconfig() {
         return rex_path::base();
     }
 
-     public static function help(): string 
-    {
-        $out = '<h1>REDAXO Terminal</h1>
-<pre>Welcome to the REDAXO Terminal.
-The terminal provides a reduced set of commands and is mainly used to call the REDAXO console.
+public static function help(): string 
+{
+    return '<h1>REDAXO Terminal</h1>
+<pre>
+Welcome to the REDAXO Terminal.
+The terminal provides an extended set of commands, including standard Unix-like commands, 
+REDAXO-specific commands, and access to the REDAXO console.
 
-The console is accessed with the command console.
-Parameters can also be passed directly, such as console package:list.
+Default Commands
+----------------
+cd, chown, date, df, echo, ffmpeg, find, free, git, grep, hostname, ls, 
+php, ping, pwd, tail, whoami
 
-Default commands
--------
-help, cd, chown, date, df, echo, ffmpeg, find, free, git, grep, hostname, ls, tail, php, ping, pwd, whoami
+Environment Variables and Shell Features
+----------------------------------------
+- Use `export VAR=value` to set environment variables
+- Use `env` to list all environment variables
+- Environment variables can be used in commands with $VAR syntax
 
-Special REDAXO commands
--------
-- showconfig
-- basepath
-- console
+Special REDAXO Commands
+-----------------------
+- showconfig: Display the contents of the REDAXO config.yml file
+- basepath: Show the base path of the REDAXO installation
+- console [args]: Access the REDAXO console. You can pass arguments directly, e.g., console package:list
 
+Using the Console
+-----------------
+To use the REDAXO console, type `console` followed by the desired command and arguments. For example:
+- console package:list: List all packages
+- console cache:clear: Clear the REDAXO cache
 
+For more information on available console commands, use `console list` or `console help [command]`.
 
+Examples
+--------
+1. Show REDAXO configuration:
+   showconfig
+
+2. Display REDAXO base path:
+   basepath
+
+3. List REDAXO packages:
+   console package:list
+
+4. Navigate to the REDAXO root directory:
+   cd $(basepath)
+
+5. List files in the current directory:
+   ls
+
+Type `help` anytime to see this information again.
 </pre>';
-
-        return $out;
-    }
+}
     
 
     public static function console($args = ''): string 
