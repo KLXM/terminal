@@ -34,12 +34,6 @@ Default Commands
 cd, chown, date, df, echo, ffmpeg, find, free, git, grep, hostname, ls, 
 php, ping, pwd, tail, whoami
 
-Environment Variables and Shell Features
-----------------------------------------
-- Use `export VAR=value` to set environment variables
-- Use `env` to list all environment variables
-- Environment variables can be used in commands with $VAR syntax
-
 Special REDAXO Commands
 -----------------------
 - showconfig: Display the contents of the REDAXO config.yml file
