@@ -2,37 +2,26 @@
 namespace skerbis\terminal;
 
 /**
- * Terminal.php - Terminal Emulator for PHP
+ * Terminal.php - Improved Terminal Emulator for PHP
  *
  * @package  Terminal.php
  * @author   SmartWF <hi@smartwf.ir>
+ * @modified by Claude
  */
-
 class TerminalPHP
 {
     private array $allowed_commands = [
-            'cd',
-            'chown',
-            'composer',
-            'date',
-            'df',
-            'echo',
-            'ffmpeg',
-            'find',
-            'free',
-            'git',
-            'grep',
-            'hostname',
-            'ls',
-            'php',
-            'pwd',
-            'tail',
-            'whoami',
+        'cd', 'chown', 'composer', 'date', 'df', 'echo', 'ffmpeg', 'find',
+        'free', 'git', 'grep', 'hostname', 'ls', 'php', 'pwd', 'tail', 'whoami'
     ];
+    
+    private string $current_directory;
+    private array $environment_variables = [];
 
     public function __construct(string $path = '')
     {
-        $this->_cd($path);
+        $this->current_directory = $path ?: getcwd();
+        $this->environment_variables['HOME'] = $this->current_directory;
     }
 
     private function shell(string $cmd): string
@@ -42,7 +31,7 @@ class TerminalPHP
 
     private function commandExists(string $command): bool
     {
-        return !empty($this->shell('command -v ' . $command));
+        return !empty($this->shell('command -v ' . escapeshellarg($command)));
     }
 
     public function __call(string $cmd, array $arg): string
@@ -52,45 +41,100 @@ class TerminalPHP
 
     public function runCommand(string $command): string
     {
-        $cmd = explode(' ', $command)[0];
-        $arg = count(explode(' ', $command)) > 1 ? implode(' ', array_slice(explode(' ', $command), 1)) : '';
+        $parts = explode(' ', $command, 2);
+        $cmd = $parts[0];
+        $arg = $parts[1] ?? '';
 
-        if (array_search($cmd, $this->getLocalCommands()) !== false) {
-            $lcmd = '_' . $cmd;
-            return $this->$lcmd($arg);
+        // Handle environment variable expansion
+        $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
+            return $this->environment_variables[$matches[1]] ?? '';
+        }, $arg);
+
+        if (method_exists($this, '_' . $cmd)) {
+            $method = '_' . $cmd;
+            return $this->$method($arg);
         }
 
         if (in_array($cmd, $this->allowed_commands)) {
-            return trim(shell_exec($command) ?? '');
+            // Use proc_open for interactive commands
+            $descriptorspec = [
+                0 => ["pipe", "r"],  // stdin
+                1 => ["pipe", "w"],  // stdout
+                2 => ["pipe", "w"],  // stderr
+            ];
+            
+            $process = proc_open($command, $descriptorspec, $pipes, $this->current_directory);
+            
+            if (is_resource($process)) {
+                $output = stream_get_contents($pipes[1]);
+                $error = stream_get_contents($pipes[2]);
+                fclose($pipes[0]);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+                
+                return $output ?: $error;
+            }
+            
+            return "Failed to execute command: $command";
         } else {
-            return 'terminal.php: Permission denied for command: ' . $cmd;
+            return "terminal.php: Permission denied for command: $cmd";
         }
     }
 
     public function normalizeHtml(string $input): string
     {
-        return str_replace(['<', '>', "\n", "\t", ' '], ['&lt;', '&gt;', '<br>', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'], $input);
-    }
-    /**
-     * Array of Local Commands
-     * @return array
-     */
-    private function getLocalCommands(): array
-    {
-        $commands = array_filter(get_class_methods($this), function ($i) {return ($i[0] == '_' && $i[1] != '_') ? true : false;});
-        foreach ($commands as $i => $command) {
-            $commands[$i] = substr($command, 1);
-        }
-
-        return $commands;
+        return str_replace(
+            ['<', '>', "\n", "\t", ' '],
+            ['&lt;', '&gt;', '<br>', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;'],
+            $input
+        );
     }
 
     private function _cd(string $path): string
     {
-        if ($path) {
-            chdir($path);
+        $new_path = realpath($this->current_directory . '/' . $path);
+        if ($new_path && is_dir($new_path)) {
+            $this->current_directory = $new_path;
+            return '';
         }
-        return '';
+        return "cd: $path: No such directory";
+    }
+
+    private function _pwd(): string
+    {
+        return $this->current_directory;
+    }
+
+    private function _echo(string $arg): string
+    {
+        return $arg;
+    }
+
+    private function _ls(string $arg = ''): string
+    {
+        $path = $arg ?: $this->current_directory;
+        $items = scandir($path);
+        return implode("\n", array_diff($items, ['.', '..']));
+    }
+
+    private function _export(string $arg): string
+    {
+        $parts = explode('=', $arg, 2);
+        if (count($parts) === 2) {
+            $this->environment_variables[$parts[0]] = $parts[1];
+            return '';
+        }
+        return "export: Invalid syntax";
+    }
+
+    private function _env(): string
+    {
+        $output = '';
+        foreach ($this->environment_variables as $key => $value) {
+            $output .= "$key=$value\n";
+        }
+        return rtrim($output);
     }
 
     private function _moin(): string
@@ -98,17 +142,11 @@ class TerminalPHP
         return 'Selber';
     }
 
-    private function _pwd(): string
-    {
-        return getcwd() ?: '';
-    }
-
     private function _ping(string $a): string
     {
         if (strpos($a, '-c ') !== false) {
-            return trim(shell_exec('ping ' . $a) ?? '');
+            return $this->shell('ping ' . escapeshellarg($a));
         }
-        return trim(shell_exec('ping -c 4 ' . $a) ?? '');
+        return $this->shell('ping -c 4 ' . escapeshellarg($a));
     }
 }
-
