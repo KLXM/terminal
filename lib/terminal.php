@@ -39,48 +39,38 @@ class TerminalPHP
         return $this->runCommand($cmd . (isset($arg[0]) ? ' ' . $arg[0] : ''));
     }
 
-    public function runCommand(string $command): string
-    {
-        $parts = explode(' ', $command, 2);
-        $cmd = $parts[0];
-        $arg = $parts[1] ?? '';
+public function runCommand(string $command): string
+{
+    $parts = explode(' ', $command, 2);
+    $cmd = $parts[0];
+    $arg = $parts[1] ?? '';
 
-        // Handle environment variable expansion
-        $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
-            return $this->environment_variables[$matches[1]] ?? '';
-        }, $arg);
+    // Handle environment variable expansion
+    $arg = preg_replace_callback('/\$(\w+)/', function($matches) {
+        return $this->environment_variables[$matches[1]] ?? '';
+    }, $arg);
 
-        if (method_exists($this, '_' . $cmd)) {
-            $method = '_' . $cmd;
-            return $this->$method($arg);
-        }
-
-        if (in_array($cmd, $this->allowed_commands)) {
-            // Use proc_open for interactive commands
-            $descriptorspec = [
-                0 => ["pipe", "r"],  // stdin
-                1 => ["pipe", "w"],  // stdout
-                2 => ["pipe", "w"],  // stderr
-            ];
-            
-            $process = proc_open($command, $descriptorspec, $pipes, $this->current_directory);
-            
-            if (is_resource($process)) {
-                $output = stream_get_contents($pipes[1]);
-                $error = stream_get_contents($pipes[2]);
-                fclose($pipes[0]);
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                proc_close($process);
-                
-                return $output ?: $error;
-            }
-            
-            return "Failed to execute command: $command";
-        } else {
-            return "terminal.php: Permission denied for command: $cmd";
-        }
+    if (method_exists($this, '_' . $cmd)) {
+        $method = '_' . $cmd;
+        return $this->$method($arg);
     }
+
+    if (in_array($cmd, $this->allowed_commands)) {
+        $fullCommand = escapeshellcmd($cmd) . ' ' . escapeshellarg($arg);
+        $output = '';
+        $return_var = 0;
+
+        exec($fullCommand . ' 2>&1', $output, $return_var);
+
+        if ($return_var !== 0) {
+            return "Error executing command: " . implode("\n", $output);
+        }
+
+        return implode("\n", $output);
+    } else {
+        return "terminal.php: Permission denied for command: $cmd";
+    }
+}
 
     public function normalizeHtml(string $input): string
     {
